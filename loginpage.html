@@ -1,0 +1,99 @@
+<form id="login-form">
+    <h2>Login</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Enter username" required>
+  
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="Enter password" required>
+  
+    <button type="submit">Login</button>
+  
+    <div id="login-status"></div>
+  </form>
+  
+  <style>
+    #login-form {
+      max-width: 300px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+  
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+  
+    button[type="submit"] {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  
+    button[type="submit"]:hover {
+      background-color: #3e8e41;
+    }
+  
+    #login-status {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #666;
+    }
+  </style>
+  
+
+  <script>
+    const form = document.getElementById('login-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginStatusDiv = document.getElementById('login-status');
+  
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+  
+      const username = usernameInput.value;
+      const password = passwordInput.value;
+  
+
+      if (!username || !password) {
+        loginStatusDiv.textContent = 'Please fill in all fields.';
+        return;
+      }
+  
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password
+        })
+      })
+      .then(response => response.json())
+      .then((data) => {
+        if (data.success) {
+          loginStatusDiv.textContent = 'Login successful!';
+          window.location.href = '/dashboard';
+        } else {
+          loginStatusDiv.textContent = 'Invalid username or password.';
+        }
+      })
+      .catch((error) => {
+        loginStatusDiv.textContent = 'Error: ' + error.message;
+      });
+    });
+  </script>
